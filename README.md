@@ -41,10 +41,12 @@
 
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
-Community - R/Television on Reddit 
-1. Some Posts talk about specific characters/instances rather than generic shows
-2. some posts relay news or talk about releases of a finale or season or interviews 
-3. Some posts ask questions generically that can be answered across all modes of TV 
+TakeMeter sorts posts from r/television on Reddit into three labels. Some posts
+discuss what happens on screen in one specific show, such as a character, an
+episode or a season arc (`show_discussion`). Some report news from off screen,
+such as a renewal, a release or finale date, casting or an interview
+(`industry_news`). The rest ask a general question about TV that people can
+answer with any show (`general_question`).
 
 
 ---
@@ -57,33 +59,75 @@ Community - R/Television on Reddit
      The decision rule is worth a point on its own and it's the thing most
      people leave out. Every taxonomy has a hardest boundary. Name yours. -->
 
-### `label_one`
+### `show_discussion`
 
-**Definition:**
-
-**Example 1:**
->
-
-**Example 2:**
->
-
-### `label_two`
-
-**Definition:**
+**Definition:** A post about what happens on screen in one specific show, such as a character, episode, scene or season arc, where the poster gives their own opinion or reading of it.
 
 **Example 1:**
->
+> Could be a case of low expectations but I enjoyed the first two episodes of vampire sitcom Eternally Yours
+Seems like the buzz for this hasn't been too positive. I was pleasantly surprised though.
+
+It's going to be compared a lot to What We Do in the Shadows since they both have vampires. Eternally Yours also revolves around a found family as well, I think it's aiming for a different niche.
+
+It feels more wholesome? Definitely comparable to the creator's US adaptation of Ghosts. I say wholesome because they're reformed from killing & two of the couples have their own family.
+
+One has an adopted vampire daughter & the other has half vampire sons with his human wife that doesn't know he's a vampire.
+
+She's learned he's a vampire many times because they aren't particularly careful about it. So they've wiped her mind more times than is probably safe.
+
+One of the half vampire sons is modeled after Edward Cullen type vampires. He's deeply broody & offers up tortured insights that have the surface depth of a spoon. It's my favorite running gag so far.
+
+I think it's got a solid cast with Parker Young, Rose Abdoo, Ed Weeks & Allegra Edwards. I wouldn't be shocked if it gets canceled since it's not your typical CBS show. Ghosts it's still going strong, though. So who knows?
+
 
 **Example 2:**
->
+I prefer Treme over The Wire
+Not to understate how iconic and culturally relevant The Wire is but of the two main David Simon shows out there I’ve always personally preferred Treme (even with its rather rushed five episode fourth episode). The atmosphere was much cozier and ‘slice of life’, the characters were a lot more immersive anr felt like family, and I just loved the emphasis on art, food, music and just generally New Orleans culture
+
+It’s a huge shame to me that Treme never caught on like The Wire did and it’s basically been completely forgotten now (not that it was ever paid much attention to even when it was airing; it’s a miracle to me that we even got three and a half seasons). Although I suppose I do understand why it never did, what with how it basically has like zero plot. It’s solely about the characters and their relationships- complete opposite of The Wire
+
+
+### `industry_news`
+
+**Definition:** A post reporting something that happened off screen, such as a renewal, cancellation, release or finale date, casting, trailer, ratings or an interview.
+
+**Example 1:**
+SNL UK: Meet the Saturday Night Live Weekend Update hosts going viral each week
+
+**Example 2:**
+Ryan Coogler’s ‘X-Files’ Update Scores Hulu Series Order
+
+### `general_question`
+
+**Definition:** A question about TV in general that isn't tied to one show, so people can answer it with examples from any show but also contains general tv questions
+
+**Example 1:**
+TV shows with an unaired/unofficial pilot where you’re glad they changed the cast or tone of the show?
+I remember a few years ago, I watched the unaired pilot for The Big Bang Theory, which had a different Penny (different actress, different name and I think she was an actual slut?). The guys felt a bit creepier than the sweet awkward nerds we had in the official series and the overall tone felt more mature and sexual.
+
+A few minutes ago, Youtube recommended me the unaired pilot for Big Time Rush. It wasn't my favorite show but honestly I think it was funny for Nickelodeon in those days; and in that pilot you can clearly see how recasting the lead actor (Kendall) might have completely changed the band's dynamic, and why adding a caring, protective mom for a group of boys was so important. -Here's the link in case you're interested: https://youtu.be/HxUYJ0wAcKA
+
+What unaired pilot or original concept have you seen that you think wouldnt have worked? where they made the right call by recasting or changing the tone of the show? Comes to my mind Ren and Stimpy adult version or the Tracey Ullman's version of The Simpsons as well. I think also South Park had an early version before the pilot?
+
+It would be nice if you add the URL to the pilot you mention c: Thanks!
+
+
+
+**Example 2:**
+Not counting Westerns, what classic TV shows from the 60s do you still enjoy?
 
 ### The hardest boundary
 
-**Which two labels:**
+**Which two labels:** `industry_news` vs. `show_discussion`. 
+**Boundary post:**
+>Can't believe Glee (2009) is almost 20 years old. The reboot actually sounds good, with the right people involved, and I have hopes.
+ It mentions the reboot announcement, which is news, but nothing new is being reported. The post is the poster's own
+feelings about the show. Under the rule below I labelled it `show_discussion`.
 
 **The decision rule I used every time:**
-<!-- e.g. "If the post names a specific checkable fact, it's `analysis`, even
-     if the tone is heated." -->
+If the post's main point is a new event that happened off screen such as announcements, date, interviews, etc, it's `industry_news`, even if the poster adds an opinion. It's `show_discussion` only when the poster's argument is about what happens on screen and the news is just the reason they're bringing it up or if they are talking about a specific show or movie. 
+
+**Secondary rule (`general_question` vs. `show_discussion`):** If the question can only be answered by people who watched one named show, it's `show_discussion`. If the named show is just an example and people could answer from any show, it's `general_question`.
 
 
 
@@ -91,22 +135,28 @@ Community - R/Television on Reddit
 
 ## The Dataset
 
-<!-- Where you collected from, how you labelled, your counts, and three hard
-     cases. -->
 
-**Where the posts came from:**
+**Where the posts came from:** 150 posts from r/television on Reddit.
+I scrolled through the top and recent posts and deciphered form there 
 
 **How I labelled them:** <!-- Cold first? Pre-labelled with AI and corrected?
 Say so plainly — the disclosure is required, not penalised. -->
+
+135 posts were labelled cold: I read each post and chose the label myself based on what would fit 
+15 posts are marked `pre-labelled` in the `note` column. I asked claude to label the post for me and see what it would say for the criteria 
+
 
 **Counts per label:**
 
 | Label | Count | Share |
 |---|---|---|
-|  |  |  |
-|  |  |  |
-|  |  |  |
-| **Total** |  | 100% |
+| `industry_news` | 85 | 57% |
+| `show_discussion` | 39 | 26% |
+| `general_question` | 26 | 17% |
+| **Total** | 150 | 100% |
+
+This is below the 200 posts the brief asks for, and it's lopsided toward
+`industry_news`, because most of what r/television's feed shows is news links.
 
 **Three hard cases**
 
@@ -114,25 +164,41 @@ Say so plainly — the disclosure is required, not penalised. -->
      been, and what you chose. These are worth more than the easy 190. -->
 
 **1.**
-> *The post:*
+> *The post:* #73. "Who is watching Major Crimes? The show is number 5 on the
+> Nielsen Ratings for acquired TV shows, beating out Gilmore Girls and Greys
+> Anatomy. Who is watching this show? What is the target demographic and why is
+> it so successful?"
 >
-> *Could have been:*
+> *Could have been:* `industry_news` (it reports ratings) or `show_discussion`.
 >
-> *I chose, because:*
+> *I chose `show_discussion`, because:* the ratings are only the reason for
+> posting. The question is about why this one show appeals to people, and only
+> people who know Major Crimes can answer it.
 
 **2.**
-> *The post:*
+> *The post:* #10. "Anyone else remember, 'The Hard Times of RJ Berger' 2010 MTV
+> Show"
 >
-> *Could have been:*
+> *Could have been:* `general_question` (it's phrased as a question to everyone)
+> or `show_discussion`.
 >
-> *I chose, because:*
+> *I chose `show_discussion`, because:* by my secondary rule, only people who
+> watched that one named show can answer it. It isn't a question you can answer
+> with any show.
 
 **3.**
-> *The post:*
+> *The post:* #86. "Offbeat Thriller Phony Is Something Genuinely New on TV:
+> Review"
 >
-> *Could have been:*
+> *Could have been:* `industry_news` (a published article, linked like a news
+> headline) or `show_discussion`.
 >
-> *I chose, because:*
+> *I chose `show_discussion`, because:* a review is someone's reading of what
+> happens on screen, not a report of an off-screen event. Looking back, I
+> labelled a similar review, #63 ("'Nobody Wants This' Season 3 Has Already
+> Learned From Its Season 2 Mistakes | Review"), as `industry_news`. So I didn't
+> apply the rule consistently to reviews, and that's a boundary to check in
+> unit 6.
 
 ---
 
@@ -140,15 +206,38 @@ Say so plainly — the disclosure is required, not penalised. -->
 
 <!-- Your starting model, your settings, and anything you changed and why. -->
 
-**Base model:**
+**Base model:** `distilbert-base-uncased`
 
 **Settings:** <!-- epochs, learning rate, batch size, seed -->
+3 epochs, learning rate 2e-5, batch size 16, 128 tokens per post, seed 42.
+
+Trained on an Apple Silicon GPU (MPS), torch 2.14.1, Python 3.13. Training took
+about 17 seconds. The device is also recorded in `results.json`.
 
 **Anything I changed from the defaults, and why:**
+Nothing. All the training settings are the defaults. The only notebook edit is
+`LABELS`, set to my three labels.
+
+To get the notebook running I had to fix two setup problems:
+- My virtual environment was on Python 3.14, which `requirements.txt` doesn't
+  support, and training crashed inside `datasets`. I rebuilt `.venv` on Python
+  3.13.
+- My first labels file wasn't valid CSV, so I converted it into `labels.csv`.
 
 **Split sizes:** <!-- train / val / test, and per-label counts in the test
 split. If a label had fewer than about 8 in test, say so — it explains a lot
 of next unit's variance. -->
+train 104 · val 23 · test 23 (70/15/15, stratified)
+
+| Label | Train | Val | Test |
+|---|---|---|---|
+| `show_discussion` | 27 | 6 | 6 |
+| `industry_news` | 59 | 13 | 13 |
+| `general_question` | 18 | 4 | 4 |
+
+`show_discussion` (6) and `general_question` (4) both have fewer than 8 posts
+in the test split. One post there is worth 17–25 points of recall, so expect
+those labels' scores to swing a lot between seeds next unit.
 
 
 
@@ -165,17 +254,20 @@ of next unit's variance. -->
 
 **Moment 1**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
-
+- *What I asked for:* I asked claude to evaluate my criteria and see whether it is good or not and whether the posts can fit into each criteria 
+- *What came back:* It found that my criteria (1) was too vague and virtually a lot of posts are able to be fit in each of the criterias 
+- *What I changed:* I changed the criteria and made it more strict and only made it into headlines or current events from the industry. 
 **Moment 2**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* to help me find out why the training crashed.
+- *What came back:* the crash happened because my `.venv` was on Python 3.14,
+  which `requirements.txt` says isn't supported. It rebuilt the environment on
+  Python 3.13 and the training ran.
+- *What I changed:* I switched the notebook's kernel in VS Code to the new
+  `.venv` and re-ran sections 1–5 myself. I got the same `results.json`.
 
 **Pre-labelling disclosure:**
+The 15 posts marked `pre-labelled`. I asked claude to label the post for me and see what it would say for the criteria 
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
@@ -397,4 +489,6 @@ learned:**
 ---
 
 📖 **How to run this project: [RUNNING.md](RUNNING.md)**
+
+
 
