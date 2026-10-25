@@ -53,61 +53,41 @@ whether you hit them:
 
 ## 1.
 
-<!-- Your criterion. It must name a number. -->
+Overall accuracy on the held-out test split is at least **0.70** on every one of the three seeds (42, 7, 2024).
 
-
-
-**Why this target:**
-
-
+**Why this target:** My three labels split by topic (on-screen content, off-screen news, open question), not by tone, and news posts carry strong word signals like "renewed", "premiere date" and "cast as", so the model should beat the 0.33 guessing rate by a lot. I didn't go higher because the test split is only about 30 posts, so each mistake costs about 3 points and one bad seed could drop the score 6 to 9 points below the others.
 
 ---
 
 ## 2.
 
-<!-- Your criterion. -->
+Every label (`show_discussion`, `industry_news`, `general_question`) has an F1 of at least **0.60** on every seed.
 
-
-
-**Why this target:**
-
-
+**Why this target:** One strong label shouldn't be allowed to hide a weak one, so I set a floor for each label. It's looser than the accuracy target because my smallest label will probably have only about 8 test posts, and an F1 on 8 posts can swing 0.15 between seeds. I expect `general_question` to be the small one, because r/television's front page is mostly news.
 
 ---
 
 ## 3.
 
-<!-- Your criterion. -->
+In `labels.csv`, no label is more than **50%** of the rows and none is less than **20%**.
 
-
-
-**Why this target:**
-
-
+**Why this target:** r/television is heavily skewed toward news links. If I labelled what I scrolled past, `industry_news` would probably be 60% or more and the model could score well just by guessing news. Keeping every label at 20% or more (about 40 of 200 posts) means each one has enough examples in training and in the test split.
 
 ---
 
 ## 4.
 
-<!-- Your criterion. -->
+When I label the 30 staff posts under `data/staff_taxonomy.md`, I agree with the staff labels on at least **21 of 30 (0.70)**.
 
-
-
-**Why this target:**
-
-
+**Why this target:** That taxonomy is someone else's, and it sorts by tone (`analysis` / `hot_take` / `reaction`), which is harder to judge than my topic labels, so I don't expect 90%. Still, guessing gets about 10 of 30. If I can't apply written rules at 70%, my own 200 labels are probably inconsistent too, especially on the `industry_news` / `show_discussion` boundary.
 
 ---
 
 ## 5.
 
-<!-- Your criterion. -->
+On every seed, accuracy on the model's most confident third of test posts is at least **0.15 higher** than on its least confident third (from `results.json` → `confidence`).
 
-
-
-**Why this target:**
-
-
+**Why this target:** I expect the uncertain posts to be the ones on my hardest boundary, where news links come with the poster's opinion added, and the confident ones to be clear headlines and clear "what show should I watch" questions. With about 10 posts in each third, one post is worth 0.10, so a one-post gap could be chance. 0.15 means at least two posts' difference. If the model is as accurate on its unsure posts as on its sure ones, its confidence score tells me nothing.
 
 ---
 
