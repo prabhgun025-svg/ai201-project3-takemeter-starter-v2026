@@ -41,7 +41,10 @@
 
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
-
+Community - R/Television on Reddit 
+1. Some Posts talk about specific characters/instances rather than generic shows
+2. some posts relay news or talk about releases of a finale or season or interviews 
+3. Some posts ask questions generically that can be answered across all modes of TV 
 
 
 ---
@@ -394,3 +397,4 @@ learned:**
 ---
 
 📖 **How to run this project: [RUNNING.md](RUNNING.md)**
+
