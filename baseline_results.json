@@ -1,0 +1,149 @@
+{
+  "model": "facebook/bart-large-mnli",
+  "n": 23,
+  "seed": 42,
+  "held_out": true,
+  "used_definitions": true,
+  "scores": {
+    "n": 23,
+    "accuracy": 0.5652173913043478,
+    "f1_macro": 0.4151515151515152,
+    "per_label": {
+      "general_question": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 4
+      },
+      "industry_news": {
+        "precision": 1.0,
+        "recall": 0.5384615384615384,
+        "f1": 0.7000000000000001,
+        "support": 13
+      },
+      "show_discussion": {
+        "precision": 0.375,
+        "recall": 1.0,
+        "f1": 0.5454545454545454,
+        "support": 6
+      }
+    }
+  },
+  "predictions": [
+    {
+      "text": "Brand New Cherry Flavor\nA very odd little series on Netflix.\nRosa Salazar (Alita) as an aspiring filmmaker who runs afoul of an unscrupulous producer who cons her out of her film.\nShe seeks the assistance of a very strange woman, and craziness ensues.\nNot for the squeamish.",
+      "gold": "show_discussion",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "Alex Scott: What does hosts Disney+ exit highlight about coverage of women's football?",
+      "gold": "industry_news",
+      "predicted": "industry_news"
+    },
+    {
+      "text": "'Newlyweds' just felt right! So fun!;-)\nSorta like love at first sight. I thought it was well-written and of course Tea and Tim had the chemistry you'd expect from a real-life couple. And Jamie was ... Jamie;- Of course it was sitcom-y, what would you expect?\nNot trying to bring anyone down, but since my wife passed this summer, I often say that I can't laugh without crying or vice versa... so there I was... doing both at the end, very hard;-\nI hope it does well. I only posted this because I saw no new threads reviewing the debut yet!?",
+      "gold": "show_discussion",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "New documentary 'The Eyes of Ghana' produced by the Obamas and streamer IShowSpeed",
+      "gold": "industry_news",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "Which one do you like more? Batman 66 or Hulk 77\nThey are both great shows. Batman: 120 episodes 3 seasons 2 movies. Hulk: 80 episodes 5 seasons 3 movies",
+      "gold": "general_question",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "Paramount+ Orders 'Voyage to the Bottom of the Sea' With Daisy Ridley",
+      "gold": "industry_news",
+      "predicted": "industry_news"
+    },
+    {
+      "text": "Why Wall Street Is So Worried About Skydance\u2019s Debt",
+      "gold": "industry_news",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "Why don\u2019t they remake fan favorites?\nFor years two shows topped the list of \u2018cancelled too soon\u2019 and became cult classics.",
+      "gold": "general_question",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "Casey Bloys Unveils His Skydance DTC Content Team Featuring All HBO Max Execs: Francesca Orsi, Amy Gravitt, Sarah Aubrey & More",
+      "gold": "industry_news",
+      "predicted": "industry_news"
+    },
+    {
+      "text": "Netflix Names Peter Rice As Chief Content Officer",
+      "gold": "industry_news",
+      "predicted": "industry_news"
+    },
+    {
+      "text": "\u2018Glee\u2019 Reboot Officially Set at Disney+ and Hulu",
+      "gold": "industry_news",
+      "predicted": "industry_news"
+    },
+    {
+      "text": "Anna Faris Was \u201cHurt\u201d By Chuck Lorre\u2019s Recent Comments About Her \u2018Mom\u2019 Exit: \u201cYikes\u201d",
+      "gold": "industry_news",
+      "predicted": "industry_news"
+    },
+    {
+      "text": "Who is the target audience for Hazbin Hotel?\nThis is a genuine question because I don\u2019t get it. I always remember it being around but it seems to have really exploded in popularity this year. I was at comic con and saw so much of it when normally I don\u2019t see a lot for it. That\u2019s kinda what got me thinking about this.",
+      "gold": "show_discussion",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "WGA East Is Helping Writers Make It Harder For AI To Scrape Their Work",
+      "gold": "industry_news",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "Jon Tower Takes Executive Producer Role at Revamped \u2018CBS Mornings\u2019",
+      "gold": "industry_news",
+      "predicted": "industry_news"
+    },
+    {
+      "text": "Sam Waterston Returns to NBC in \u2018Line of Fire\u2019 as a Former President",
+      "gold": "industry_news",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "Shows coming up on their 100th episode. I was thinking about the television landscape recently and how we usually either get limited series or shows are canceled before they can really take off. The hundredth episode used to be a big milestone for shows, and a cause for celebration. Are there any shows where this episode is imminent?",
+      "gold": "show_discussion",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "What's the most mundane show of your country/area?\nThere's a vibe of show that every culture makes. That mundane, every day slow roll show that everyone seems to know. Sitcoms and soap operas seem to fall into it the most no matter where it's from.",
+      "gold": "general_question",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "What tv series has the best writing from the first episode to the last second?",
+      "gold": "general_question",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "Kenan Thompson on Shane Gillis 'SNL' Monologue: 'Overshadowed' Episode",
+      "gold": "industry_news",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "20 Years Later, Kyle Chandler's Network Drama, Friday Night Lights Is Still One of the Best Ever Made",
+      "gold": "show_discussion",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "I Feel Like Ted Could Still Work On A Lower Budget\nThe main reason for Ted not getting a third season is the budget, which is apparently in the region of $8m an episode, and Seth MacFarlane refuses to compromise on the animation quality of Ted as a cost-cutting measure.",
+      "gold": "show_discussion",
+      "predicted": "show_discussion"
+    },
+    {
+      "text": "44 Years Ago, A Real-Life Incident Changed the \u2018M*A*S*H\u2019 Finale Forever",
+      "gold": "industry_news",
+      "predicted": "show_discussion"
+    }
+  ]
+}
