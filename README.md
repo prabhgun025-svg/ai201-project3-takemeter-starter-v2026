@@ -99,7 +99,7 @@ Ryan Coogler’s ‘X-Files’ Update Scores Hulu Series Order
 
 ### `general_question`
 
-**Definition:** A question about TV in general that isn't tied to one show, so people can answer it with examples from any show but also contains general tv questions
+**Definition:**  A question about TV in general that isn't tied to one show, so people can answer it with examples from any show; if a show is named, it's only an example
 
 **Example 1:**
 TV shows with an unaired/unofficial pilot where you’re glad they changed the cast or tone of the show?
@@ -283,19 +283,21 @@ The 15 posts marked `pre-labelled`. I asked claude to label the post for me and 
 
 | Measure | Baseline | Trained | Difference |
 |---|---|---|---|
-| Overall accuracy |  |  |  |
-| Macro F1 |  |  |  |
-| F1 — `label_one` |  |  |  |
-| F1 — `label_two` |  |  |  |
+| Overall accuracy | 0.565 | 0.565 | +0.000 |
+| Macro F1 | 0.415 | 0.241 | -0.174 |
+| F1 — `general_question` | 0.000 | 0.000 | +0.000 |
+| F1 — `industry_news` | 0.700 | 0.722 | +0.022 |
+| F1 — `show_discussion` | 0.545 | 0.000 | -0.545 |
 
 **What I predicted before I looked:**
 <!-- Milestone 1 asks you to write this BEFORE seeing the trained numbers. A
      prediction made afterwards isn't one. -->
+I expect the trained model to beat the baseline, around 0.70–0.80 accuracy and 0.60–0.70 macro F1. The biggest gain should be on general_question, which the baseline got completely wrong (F1 = 0). Fine-tuning sees real examples of question-style posts, so it should learn that "asking for recommendations/help" is its own category. I also expect industry_news recall to go up, because the baseline sent news headlines about shows into show_discussion. My worry is that general_question only has a handful of examples, so its F1 may stay low and swing between seeds. The hardest boundary will still be industry_news vs show_discussion, for headlines that are about a specific show.
 
 **What the gap actually means:**
 <!-- If the baseline matched your trained model, your fine-tuning added
      nothing — and that is a real finding, not a failure. Say it plainly. -->
-
+Fine-tuning added nothing, and on macro F1 it made things worse (0.415 → 0.241). The matching accuracy is a coincidence: the confusion matrix shows the trained model predicted industry_news for all 23 test posts, and 13/23 = 0.565 is just the majority-class rate. With 104 training posts, 57% of them industry_news, and default settings, the model collapsed to the most common label instead of learning the categories. The zero-shot baseline at least split news from show discussion. My prediction (0.70–0.80 accuracy and a gain on general_question) was wrong: general_question stayed at 0, and show_discussion dropped from 0.55 to 0.
 
 
 ---
@@ -307,27 +309,34 @@ The 15 posts marked `pre-labelled`. I asked claude to label the post for me and 
 
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy (held-out) | ≥ 0.70 on every seed | 0.565 | 0.565 | 0.565 | MISSED |
+| 2. Per-label F1 floor (min of the three labels) | ≥ 0.60 for every label, every seed | 0.000 (`show_discussion` 0.00, `industry_news` 0.72, `general_question` 0.00) | 0.000 (same) | 0.000 (same) | MISSED |
+| 3. Label balance in `labels.csv` | No label > 50%, none < 20% | 56.7% / 26.0% / 17.3% | same (data, not seed-dependent) | same | MISSED |
+| 4. Agreement with staff labels | ≥ 21/30 (0.70) | not yet measured | — | — | PENDING (no `data/staff_labels.csv` yet) |
+| 5. Confidence gap (top third − bottom third accuracy) | ≥ +0.15 on every seed | 1.000 − 0.143 = +0.857 | 1.000 − 0.000 = +1.000 | 1.000 − 0.000 = +1.000 | MET (but hollow, see below) |
+
+**Device:** all three seeds ran on `mps` (Apple Silicon GPU), torch 2.14.1, `max_length` 128, as recorded in `results_three_seeds_before.json`. Settings: `distilbert-base-uncased`, 3 epochs, learning rate 2e-5, batch 16. Every seed split the data 104 train / 23 val / 23 test.
+
 
 ### Confusion matrix
 
 <!-- ⚠️ TYPED AS A MARKDOWN TABLE. The notebook prints one ready to paste.
      An image of a matrix earns nothing. -->
 
-| true \ predicted |  |  |  |
+| true \ predicted | show_discussion | industry_news | general_question |
 |---|---|---|---|
-| **** |  |  |  |
-| **** |  |  |  |
-| **** |  |  |  |
+| **show_discussion** | 0 | 6 | 0 |
+| **industry_news** | 0 | 13 | 0 |
+| **general_question** | 0 | 4 | 0 |
+
+(Seed 42. Seeds 7 and 2024 produced the identical matrix.)
 
 **My biggest off-diagonal number, and what it means:**
 <!-- Not "the model made mistakes" — WHICH boundary it didn't learn, and which
      direction. "7 real analysis posts were called hot_take and only 3 went the
      other way" is a direction, not just an error rate. -->
+
+The biggest off-diagonal number is 6: all 6 real `show_discussion` posts were called `industry_news`, and 0 went the other way. All 4 `general_question` posts went to `industry_news` too. So the model didn't learn the `show_discussion` / `industry_news` boundary at all. It didn't learn any boundary: the whole `industry_news` column is filled and the other two columns are empty. The model collapsed to the majority label (85 of 150 posts, 56.7%) and predicts it for every post on every seed. The mistakes all run one way, into `industry_news`. That points to class imbalance and too little training data, not to a confusing pair of labels. If the model were stuck on a hard boundary, some errors would go the other way.
 
 
 
@@ -340,11 +349,11 @@ The 15 posts marked `pre-labelled`. I asked claude to label the post for me and 
 
 | # | Criterion | Target | Verdict | How I decided |
 |---|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| 1 | Overall accuracy | ≥ 0.70 on every seed | MISSED | 0.565 on all three seeds, which is below 0.70 every time. It is also exactly 13/23, the share of `industry_news` in the test split. |
+| 2 | Per-label F1 floor | ≥ 0.60 for every label, every seed | MISSED | `show_discussion` and `general_question` both have F1 0.00 on all three seeds. Only `industry_news` (0.72) clears the floor. |
+| 3 | Label balance in `labels.csv` | No label > 50%, none < 20% | MISSED | Counted `labels.csv`: `industry_news` 85/150 = 56.7% (over 50%), `general_question` 26/150 = 17.3% (under 20%). `show_discussion` 39/150 = 26.0% is fine. Seeds don't affect this one. |
+| 4 | Agreement with staff labels | ≥ 21/30 (0.70) | PENDING | Can't score it: I never received `data/staff_labels.csv` from my TF, and my email asking for it got no reply, so `agreement.py` can't run. |
+| 5 | Confidence gap | ≥ +0.15 on every seed | MET | Gaps of +0.857, +1.000 and +1.000 all clear +0.15. But the model predicts `industry_news` for every post, so "confident" just means "looks like news". The top third is real news posts (always right) and the bottom third is everything else (always wrong). It meets the number without showing the confidence score is useful. |
 
 **Diagnoses**
 
@@ -356,6 +365,12 @@ The 15 posts marked `pre-labelled`. I asked claude to label the post for me and 
      ⚠️ Use your agreement report as evidence. It is the only instrument you
      have that can tell a LABELLING problem from a MODEL problem, and this
      section is graded on whether you used it that way. -->
+
+**Criteria 1 and 2: too few examples, made worse by imbalance.** The confusion matrix is one filled column. All 23 test posts were predicted `industry_news` on all three seeds, with zero spread. That is a model that collapsed to the majority label, not a model that confused two labels. If the cause were a genuinely hard pair, like news posts with an opinion added versus `show_discussion`, I would expect errors in both directions between those two labels, and `general_question` would still mostly come out right, because questions look very different from either. Instead `general_question` got 0 of 4 right too. On every seed the model had 104 training posts: 59 `industry_news` (57%), 27 `show_discussion` and only 18 `general_question`. It also barely trained: 104 posts at batch size 16 is 7 weight updates per epoch, so 21 updates in total over 3 epochs at learning rate 2e-5. That is too little signal for it to learn anything beyond "say the most common label".
+
+**Criterion 3: a labelling choice, not a model problem.** I labelled roughly what r/television's front page shows, which is mostly news. My criterion warned that would push `industry_news` to 60% or more, and I didn't fix it before training. This miss is also a likely cause of the miss on 1 and 2: the imbalance is what makes always guessing news the easiest way to lower the loss.
+
+**Labelling problem or model problem?** I couldn't use the agreement report as evidence here: I never got `data/staff_labels.csv` from my TF, and my email asking for it went unanswered. If I had it, the report would show whether I apply written rules consistently. If I'm at or above 21/30 and few disagreements are pile (a), my labels are probably consistent. Then the misses on 1 and 2 are a data-quantity and balance problem: add `general_question` and `show_discussion` posts instead of relabelling. If I'm well below 21/30, or most disagreements are pile (a), my 150 labels are probably inconsistent too, especially on the `industry_news` / `show_discussion` boundary. Then I should re-check those labels before adding more data. Even before that report arrives, the collapse already points to quantity and balance as the main cause: inconsistent labels would produce mixed errors, not the same prediction for every post.
 
 
 
@@ -369,7 +384,7 @@ The 15 posts marked `pre-labelled`. I asked claude to label the post for me and 
      data/staff_taxonomy.md, not your own — so every argument below is made
      from those definitions and those decision rules. -->
 
-**Agreement rate:** ___ / 30 = ___%
+**Agreement rate:** not available. I did not receive `data/staff_labels.csv` from my TF, and my email asking for it got no reply, so `agreement.py` could not be run and there are no disagreements to adjudicate.
 
 <!-- Nobody grades this number. A 60% who argues every disagreement from the
      stated rules beats a 95% who wrote "staff was right" nine times. Several
@@ -417,26 +432,35 @@ The 15 posts marked `pre-labelled`. I asked claude to label the post for me and 
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** `EPOCHS` from 3 to 10. Nothing else changed: same `labels.csv`, same three seeds (so the same splits), same model, learning rate 2e-5, batch 16, `max_length` 128, device `mps`.
 
-**Which diagnosis pointed at it:**
+**Which diagnosis pointed at it:** The misses on criteria 1 and 2. The before run predicted `industry_news` for all 23 test posts on every seed. With 104 training posts at batch 16, 3 epochs is only 21 weight updates at a small learning rate. That is enough to learn the label prior (57% news) but not the words that separate the labels. If the collapse came from too few updates, training longer on the same data should break it. If it came from the labels themselves, training longer shouldn't help. I picked this over rebalancing `labels.csv` because the only way to rebalance without new posts is to delete `industry_news` rows, and that would make the "too few examples" problem worse.
 
 ### Run Log — After
 
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy (held-out) | ≥ 0.70 on every seed | 0.696 | 0.870 | 0.957 | MISSED (seed 42 is 0.004 short, 16/23) |
+| 2. Per-label F1 floor (min of the three labels) | ≥ 0.60 for every label, every seed | 0.364 (`show_discussion` 0.36, `industry_news` 0.82, `general_question` 0.75) | 0.727 (`show_discussion` 0.73, `industry_news` 0.93, `general_question` 0.86) | 0.857 (`show_discussion` 0.92, `industry_news` 1.00, `general_question` 0.86) | MISSED (seed 42 `show_discussion`) |
+| 3. Label balance in `labels.csv` | No label > 50%, none < 20% | 56.7% / 26.0% / 17.3% | same | same | MISSED (data unchanged) |
+| 4. Agreement with staff labels | ≥ 21/30 (0.70) | not yet measured | — | — | PENDING (no `data/staff_labels.csv` yet) |
+| 5. Confidence gap (top third − bottom third accuracy) | ≥ +0.15 on every seed | 1.000 − 0.286 = +0.714 | 1.000 − 0.857 = +0.143 | 1.000 − 0.857 = +0.143 | MISSED (seeds 7 and 2024 are short by one post) |
 
-**Did it help, and how do I know:**
+**Device:** all three seeds ran on `mps` (Apple Silicon GPU), torch 2.14.1, `max_length` 128, as recorded in `results_three_seeds_after.json`.
 
-<!-- If it didn't, say so. Relabelling that didn't help is a genuinely
-     interesting result and earns full credit. -->
+**Confusion matrix, seed 42 (the weakest seed):**
 
+| true \ predicted | show_discussion | industry_news | general_question |
+|---|---|---|---|
+| **show_discussion** | 2 | 3 | 1 |
+| **industry_news** | 2 | 11 | 0 |
+| **general_question** | 1 | 0 | 3 |
 
+**Did it help, and how do I know:** Yes, clearly, but not enough to meet any criterion on all three seeds. Accuracy went from 0.565 / 0.565 / 0.565 to 0.696 / 0.870 / 0.957. Macro F1 went from 0.241 on every seed to 0.643 / 0.838 / 0.927, now well above the zero-shot baseline's 0.415. The collapse is gone: on every seed the model now predicts all three labels. `general_question` went from F1 0.00 to 0.75–0.86, and 3 of its 4 test posts are right on every seed. The before-and-after comparison is fair because the seeds, splits and data are identical and only the epoch count changed.
+
+Two caveats:
+- Criterion 5 went from a MET to a  MISS. Before, the confidence gap only separated news from not-news, because news was the only prediction. Now the model makes real predictions, and on seeds 7 and 2024 its least-confident third scores 6/7. That is just one post short of the +0.15 gap. Seed 42's gap is +0.714, so the confidence score does mean something, but with 7 posts per third the measure can't separate a 0.14 gap from a 0.15 one.
+- Accuracy now spreads 0.261 across the three seeds (0.696 to 0.957). The before run showed zero spread only because the model gave the same answer for every post. With 23 test posts, one post is worth 0.043. Some of the difference between seeds is the model, and some is which 23 posts each seed happened to put in the test split.
 
 ---
 
@@ -444,12 +468,19 @@ The 15 posts marked `pre-labelled`. I asked claude to label the post for me and 
 
 <!-- For each criterion still missed: what you'd do, and why you stopped. -->
 
+**Criteria 1 and 2 (seed 42).** Seed 42's errors are almost all on the `show_discussion` / `industry_news` pair: 3 discussion posts were called news and 2 news posts were called discussion. That's an error in both directions, the "genuinely hard pair" pattern, and it's the boundary I flagged as hardest in my taxonomy: news headlines about one specific show. Next I would collect more `show_discussion` posts (only 27 in training) and more examples of opinionated posts about a show's news. Then I would re-check those boundary rows against my decision rule once the agreement report tells me whether I apply rules consistently. I stopped at one change because the brief asks for one, measured cleanly.
 
+**Criterion 3.** Training longer doesn't change the data. The fix is collecting about 15 more `general_question` posts and 10 more `show_discussion` posts, which would bring 150 rows up toward the 200 the brief asks for. I didn't do it in this unit because new posts need careful labelling, and adding them would also change the test splits, which would make before and after no longer comparable.
+
+**Criterion 4.** Still pending. I never received `data/staff_labels.csv` from my TF, and my email asking for it got no reply, so `agreement.py` couldn't be run.
+
+**Criterion 5.** Missed by one post on two seeds. More test posts per third (a bigger dataset) would show whether this is a real miss or noise.
 
 **The gap between what I meant my labels to capture and what the model
 learned:**
 <!-- Two sentences. Your confusion matrix is the evidence. -->
 
+I meant `show_discussion` vs `industry_news` to depend on whether the post is about what happens on screen or off screen, but the model seems to go by surface cues like a show's name and headline-style wording. That's why seed 42's matrix has errors in both directions between those two labels. `general_question` is the label it learned closest to what I meant, with 3 of 4 posts right on every seed, probably because questions have a clear surface cue (a question about TV in general) that matches my definition.
 
 
 <!-- ═════════════════════════════════════════════════════════════════════
